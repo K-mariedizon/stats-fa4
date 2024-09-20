@@ -1,0 +1,93 @@
+---
+title: "FA4"
+author: "Kiana Marie Dizon"
+date: "2024-09-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. First, second, third, and fourth moments for each set of data
+
+```{r 1}
+# Loading the necessary data for each set
+normal <- c(67, 70, 63, 65, 68, 66, 60, 65, 68, 66, 66, 71, 64, 65, 61, 66, 65, 63, 67, 64, 67, 64, 67, 62, 65, 68, 66, 68, 64, 67, 
+            62, 65, 68, 65, 67, 64, 65, 63, 63, 66, 64, 66, 65, 65, 64, 67, 66, 63, 66, 63)
+
+skewed_right <- c(69, 62, 43, 30, 66, 65, 60, 67, 46, 67, 26, 29, 65, 61, 60, 67, 26, 24, 65, 63, 67, 64, 26, 63, 68, 61, 34, 60, 
+                  65, 66, 63, 68, 29, 63, 68, 34, 62, 65, 30, 66, 64, 24, 65, 63, 66, 66, 35, 34, 33, 34)
+
+skewed_left <- c(31, 40, 24, 29, 38, 26, 30, 38, 35, 40, 30, 26, 55, 29, 30, 26, 36, 40, 35, 26, 34, 40, 25, 28, 29, 26, 24, 28, 
+                 36, 38, 30, 27, 35, 33, 34, 31, 38, 28, 24, 34, 31, 35, 22, 24, 24, 36, 34, 25, 34, 28)
+
+skewed_right <- c(102, 65, 70, 95, 73, 70, 84, 89, 85, 85, 75, 89, 60, 76, 89, 85, 76, 92, 93, 85, 10, 93, 58, 82, 25, 43, 75, 
+                  55, 73, 84, 58, 82, 24, 20, 98, 77, 81, 43, 58, 85, 22, 85, 30, 58, 72, 79, 44, 65, 77)
+
+uniform <- c(12.1, 11.6, 12.4, 11.7, 12.1, 11.8, 12.2, 11.8, 12.1, 11.9, 12.3, 12.0, 12.1, 11.9, 12.2, 12.0, 12.4, 11.8, 12.3, 11.7, 
+             12.2, 12.0, 12.4, 11.9, 12.1, 11.8, 12.5, 11.7, 12.4, 12.0, 12.1, 11.9, 12.5, 12.0, 12.3, 12.1, 12.2, 11.9, 12.4, 12.1, 
+             12.5, 12.3, 11.9, 12.5, 12.0, 12.4, 12.3, 12.1, 12.5, 12.0)
+
+# Function to calculate moments
+calculate_moments <- function(data) {
+  n <- length(data)
+  mean_value <- mean(data)
+  m1 <- mean_value
+  m2 <- mean((data - mean_value)^2)
+  m3 <- mean((data - mean_value)^3)
+  m4 <- mean((data - mean_value)^4)
+  return(list(mean = m1, variance = m2, third_moment = m3, fourth_moment = m4))
+}
+
+# Calculate moments for each set of data
+moments_normal <- calculate_moments(normal)
+moments_skewed_right <- calculate_moments(skewed_right)
+moments_skewed_left <- calculate_moments(skewed_left)
+moments_uniform <- calculate_moments(uniform)
+
+# Display results
+moments_normal
+moments_skewed_right
+moments_skewed_left
+moments_uniform
+
+```
+### 2. Moments about the mean are the same as moments computed above since they're calculated from the mean
+
+## 3. Moments about the number 75 for the set of female height measurements
+
+```{r 3}
+# Calculate moments about 75
+calculate_moments_about_75 <- function(data) {
+  m1 <- mean(data - 75)
+  m2 <- mean((data - 75)^2)
+  m3 <- mean((data - 75)^3)
+  m4 <- mean((data - 75)^4)
+  return(list(first_moment = m1, second_moment = m2, third_moment = m3, fourth_moment = m4))
+}
+
+moments_about_75_normal <- calculate_moments_about_75(normal)
+
+# Display results
+moments_about_75_normal
+
+```
+## 4. Verify the relations between the moments
+
+```{r 4}
+# Using the given formulas for m2, m3, and m4:
+m1_prime <- moments_normal$mean
+m2_prime <- moments_normal$variance
+m3_prime <- moments_normal$third_moment
+m4_prime <- moments_normal$fourth_moment
+
+# Verify the relations
+m2 <- m2_prime - m1_prime^2
+m3 <- m3_prime - 3 * m1_prime * m2_prime + 2 * m1_prime^3
+m4 <- m4_prime - 4 * m1_prime * m3_prime + 6 * m1_prime^2 * m2_prime - 3 * m1_prime^4
+
+# Display results
+list(m2 = m2, m3 = m3, m4 = m4)
+
+```
